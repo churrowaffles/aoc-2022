@@ -9,10 +9,11 @@ for line in input:
     if line == '\n':
         if this_elf_calories > highest_calories:
             highest_calories = this_elf_calories
-        elves.append(this_elf_calories)
-        this_elf_calories = 0
     else:
         this_elf_calories += int(line.strip())
+        continue
+    elves.append(this_elf_calories)
+    this_elf_calories = 0
 
 print(f"Highest Calories is {highest_calories}")
 # Highest Calories is 69501
