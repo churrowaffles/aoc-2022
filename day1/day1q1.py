@@ -1,5 +1,6 @@
 with open('day1input.txt', 'r') as file:
     input = file.readlines()
+    input.append('\n')
 
 this_elf_calories = 0
 highest_calories = 0
@@ -9,12 +10,12 @@ for line in input:
     if line == '\n':
         if this_elf_calories > highest_calories:
             highest_calories = this_elf_calories
+        elves.append(this_elf_calories)
+        this_elf_calories = 0
     else:
         this_elf_calories += int(line.strip())
-        continue
-    elves.append(this_elf_calories)
-    this_elf_calories = 0
 
+print(elves)
 print(f"Highest Calories is {highest_calories}")
 # Highest Calories is 69501
 
