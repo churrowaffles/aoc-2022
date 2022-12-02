@@ -1,4 +1,4 @@
-with open('day1input.txt', 'r') as file:
+with open('day1.txt', 'r') as file:
     input = file.readlines()
     input.append('\n')
 
@@ -15,7 +15,6 @@ for line in input:
     else:
         this_elf_calories += int(line.strip())
 
-print(elves)
 print(f"Highest Calories is {highest_calories}")
 # Highest Calories is 69501
 
