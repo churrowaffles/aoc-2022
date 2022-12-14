@@ -1,63 +1,65 @@
-def treeIsHidden(treemap, row, column, length):
+def treeIsHidden(treemap, row, column):
     sides_blocked = 0
     current_tree_value = treemap[row][column]
-    # Check left side
-    for i in range(row):
-        if current_tree_value <= treemap[i][column]:
-            sides_blocked += 1
-            break # if outer tree is blocking current tree
-    # Check right side
-    for i in range(length - row - 1):
-        if current_tree_value <= treemap[row+i+1][column]:
-            sides_blocked += 1
-            break # if outer tree is blocking current tree
     # Check top
-    for i in range(column):
-        if current_tree_value <= treemap[row][i]:
+    for r in treemap[:row][::-1]:
+        if r[column] >= current_tree_value:
             sides_blocked += 1
-            break # if outer tree is blocking current tree
+            break
+
     # Check bottom
-    for i in range(length - column - 1):
-        if current_tree_value <= treemap[row][column+i+1]:
+    for r in treemap[row+1:]:
+        if r[column] >= current_tree_value:
             sides_blocked += 1
-            break # if outer tree is blocking current tree 
+            break
+
+    # Check left
+    for col in treemap[row][:column][::-1]:
+        if col >= current_tree_value:
+            sides_blocked += 1
+            break
+
+    # Check right
+    for col in treemap[row][column+1:]:
+        if col >= current_tree_value:
+            sides_blocked += 1
+            break
     
     if sides_blocked == 4:
         return 1
-    else:
-        return 0
+    return 0
 
-def calculateScenicScore(treemap, row, column, length):
-    left = right = top = bottom = 0
 
+def calculateScenicScore(treemap, row, column):
+    # Account for the last tree seen (or edge tree)
+    left = right = top = bottom = 1
+    current_tree_value = treemap[row][column]
+
+    # Ignore all edge trees
     # Check top
-    move_row, move_column = row - 1, column
-    while move_row > 0 and treemap[row][column] > treemap[move_row][column]:
+    for r in treemap[1:row][::-1]:
+        if r[column] >= current_tree_value:
+            break
         top += 1
-        move_row -= 1
-    top += 1
 
     # Check bottom
-    move_row, move_column = row + 1, column
-    while move_row < length - 1 and treemap[row][column] > treemap[move_row][column]:
+    for r in treemap[row+1:-1]:
+        if r[column] >= current_tree_value:
+            break
         bottom += 1
-        move_row += 1
-    bottom += 1
 
     # Check left
-    move_row, move_column = row, column - 1
-    while move_column > 0 and treemap[row][column] > treemap[row][move_column]:
+    for col in treemap[row][1:column][::-1]:
+        if col >= current_tree_value:
+            break
         left += 1
-        move_column -= 1
-    left += 1
 
     # Check right
-    move_row, move_column = row, column + 1
-    while move_column < length - 1 and treemap[row][column] > treemap[row][move_column]:
+    for col in treemap[row][column+1:-1]:
+        if col >= current_tree_value:
+            break
         right += 1
-        move_column += 1
-    right += 1
-    
+
     return(top * bottom * left * right)
 
 
@@ -67,35 +69,34 @@ with open('day8.txt', 'r') as file:
 
 length_of_side = len(treemap[0])
 
-# PART 1
-# Loop through all tree values that are not at the edge
-hidden_trees = 0
+# PART 1 & 2
 row = column = 1
+
+hidden_trees = 0
+highest_scenic_score = 0
+
+# Loop through all tree values that are not at the edge
 while row > 0 and row < length_of_side - 1:
     while column > 0 and column < length_of_side - 1:
-        hidden_trees += treeIsHidden(treemap, row, column, length_of_side)
+
+        # calculate how many trees are hidden
+        hidden_trees += treeIsHidden(treemap, row, column)
+
+        # calculate scenic score of each tree
+        scenic_score = calculateScenicScore(treemap, row, column)
+        if highest_scenic_score < scenic_score:
+            highest_scenic_score = scenic_score
+        
         column += 1
     row += 1
     column = 1
+
 
 total_trees = length_of_side * length_of_side
 visible_trees = total_trees - hidden_trees
 
 print("Visible trees:", visible_trees)
 # Visible trees: 1812
-
-# PART 2
-highest_scenic_score = 0
-row = column = 1
-# Loop through all tree values
-while row > 0 and row < length_of_side - 1:
-    while column > 0 and column < length_of_side - 1:
-        scenic_score = calculateScenicScore(treemap, row, column, length_of_side)
-        if highest_scenic_score < scenic_score:
-            highest_scenic_score = scenic_score
-        column += 1
-    column = 1
-    row += 1
 
 print("Highest scenic score:", highest_scenic_score)
 # Highest scenic score: 315495
