@@ -19,6 +19,7 @@ def start_and_end(text_file):
     heightmap[(x, y)] = 'a'
     return ((x,y),(x2,y2))
 
+
 def valid_coordinate(current_c, compare_c):
     if not heightmap.get(compare_c):
         return False
@@ -34,6 +35,7 @@ def valid_coordinate(current_c, compare_c):
         return True
     return False
 
+
 def valid_coordinate_reverse(current_c, compare_c):
     if not heightmap.get(compare_c):
         return False
@@ -44,6 +46,7 @@ def valid_coordinate_reverse(current_c, compare_c):
     if compare > current - 2:
         return True
     return False
+
 
 def BFS(locations_to_visit, f, endpoint):
     distance = 0
@@ -68,22 +71,20 @@ def BFS(locations_to_visit, f, endpoint):
                     locations_to_visit.append(c)
 
             visited_locations[location] = distance
-
         locations_to_visit.pop(0)
         
 
-# PART ONE SOLUTION
 heightmap = {}
 start_end_coordinates = start_and_end('day12.txt')
 starting_point, ending_point = start_end_coordinates[0], start_end_coordinates[1]
 
+# PART ONE SOLUTION
 # Start from the starting point and navigate to 'E'
 locations_to_visit = [starting_point, None]
 shortest_path = BFS(locations_to_visit=locations_to_visit, f=valid_coordinate, endpoint='E')
 print("Part One: The shortest path will take", shortest_path, "steps.")
 
 # PART TWO SOLUTION
-
 # Start from the 'E' and navigate to the nearest 'a'
 locations_to_visit = [ending_point, None]
 shortest_path = BFS(locations_to_visit=locations_to_visit, f=valid_coordinate_reverse, endpoint='a')
