@@ -1,11 +1,10 @@
 from collections import defaultdict
 
-
 class directory:
     def __init__(self, parent, name):
         self.name = name # Current node name (e.g. "/")
         self.parent = parent # Pointer to parent
-        self.contents = {} # To hold the contents of the current directory (e.g. "/")
+        self.contents = {} # To hold the contents of the current directory
 
 
 # Recursively calculate directory sizes 
@@ -27,6 +26,7 @@ def smallestDirectoryToDelete(directories):
     for i in sorted(directories.values()):
         if i > (30000000 - (70000000 - directories['/'])):
             return i
+
 
 # Create the root directory
 root = directory(parent=None, name="/")
