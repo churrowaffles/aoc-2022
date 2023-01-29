@@ -1,12 +1,13 @@
-def move(rope, direction):
+def move_head(rope, direction):
     if direction == 'R':
         rope[0] += 1
     elif direction == 'L':
         rope[0] -= 1
     elif direction == 'U':
-        rope[1] += 1
-    elif direction == 'D':
         rope[1] -= 1
+    elif direction == 'D':
+        rope[1] += 1
+
 
 def no_move(head, tail):
     # Same Row
@@ -22,6 +23,7 @@ def no_move(head, tail):
     # Diagonally connected (1 Column and 1 Row away)
     elif abs(tail[0] - head[0]) == 1 and abs(tail[1] - head[1]) == 1:
         return True
+
 
 def move_tail(head, tail):
     if not no_move(head, tail):
@@ -47,17 +49,17 @@ def move_tail(head, tail):
                 tail[0] += x_distance
                 tail[1] += y_distance // 2
 
+
 with open('day9.txt', 'r') as file:
     instructions = [line.rstrip().split() for line in file.readlines()]
 
-# Instantiate head and tail
-# (x, y) coordinates
+# Instantiate head and tail ((x, y) coordinates)
 head_p1 = [0, 0]
 tail_p1 = [0, 0]
-body_p2 = [[0, 0] for i in range(10)]
+whole_body_p2 = [[0, 0] for i in range(10)]
 
 # Hash Table to represent visited coordinates 
-# recorded in tuples e.g. (3, 5) or (0, -4)
+# Coordinates are recorded in tuples e.g. (3, 5) or (0, -4)
 visited_locations_p1 = {}
 visited_locations_p1[(0, 0)] = True
 
@@ -65,31 +67,29 @@ visited_locations_p2 = {}
 visited_locations_p2[(0, 0)] = True
 
 for instruct in instructions:
-    for i in range(int(instruct[1])):
-        move(head_p1, instruct[0])
+    direction, positions_to_move = instruct[0], int(instruct[1])
+    for i in range(positions_to_move):
+        # PART ONE
+        move_head(head_p1, direction)
         move_tail(head_p1, tail_p1)
         visited_locations_p1[(tuple(tail_p1))] = True
 
-        # Move the Head
-        move(body_p2[0], instruct[0])
+        # PART TWO
+        move_head(whole_body_p2[0], direction)
         index = 0
-        while len(body_p2) - 1 > index:
-            move_tail(body_p2[index], body_p2[index+1])
+        while len(whole_body_p2) - 1 > index:
+            move_tail(whole_body_p2[index], whole_body_p2[index+1])
             index += 1
-        visited_locations_p2[tuple(body_p2[-1])] = True
+        visited_locations_p2[tuple(whole_body_p2[-1])] = True
         
         '''
-        # VISUALISATION: This visualisation will be upside down #
-        # You may swap += and -= in 'U' and 'D' of move function to see it right side up #
-
+        # VISUALISATION #
         visualisation = [['.'] * 50 for i in range(50)]
         for i in body_p2:
             visualisation[15 + i[1]][15 + i[0]] = str(body_p2.index(i))
             if body_p2.index(i) == 0:
                 visualisation[15 + i[1]][15 + i[0]] = 'h'
         visualisation[15][15] = 's'
-
-
         visual = [''.join(v) for v in visualisation]
         for i in visual:
             print(i)
