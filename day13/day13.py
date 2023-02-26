@@ -11,6 +11,7 @@ def main(file):
         if compare_elements(packets[0], packets[1]):
             sum_of_indices += index + 1
     print("Part 1:", sum_of_indices)
+    # Part 1: 6272
 
     # PART TWO
     signal = parse_file_p2(file)
@@ -23,8 +24,8 @@ def main(file):
     for index, packet in enumerate(sorted_signals):
         if packet in additional:
             decoder *= index + 1
-    print("Part 2:", decoder)
-    
+    print("Part 2:", decoder) 
+    # Part 2: 22288
 
 def parse_file(text):
     # Parse input into an ordered list of packets pairs
@@ -57,20 +58,23 @@ def compare_elements(a, b):
     i = 0
     while i < max(len(a), len(b)):
         try:
-            if isinstance(a[i], int) and isinstance(b[i], int):
-                if a[i] > b[i]:
-                    return False
-                if a[i] < b[i]:
-                    return True
-                i += 1
-                continue
+            match a[i], b[i]:
+                case int(), int():
+                    if a[i] > b[i]:
+                        return False
+                    if a[i] < b[i]:
+                        return True
+                    i += 1
+                    continue
             
-            if isinstance(a[i], int):
-                check_inner_list = compare_elements([a[i]], b[i])
-            elif isinstance(b[i], int):
-                check_inner_list = compare_elements(a[i], [b[i]]) 
-            else:
-                check_inner_list = compare_elements(a[i], b[i])
+                case int(), list():
+                    check_inner_list = compare_elements([a[i]], b[i])
+
+                case list(), int():
+                    check_inner_list = compare_elements(a[i], [b[i]]) 
+
+                case list(), list():
+                    check_inner_list = compare_elements(a[i], b[i])
             
             if check_inner_list is not None:
                 return check_inner_list
