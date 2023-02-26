@@ -8,7 +8,7 @@ def main(file):
     for index, packets in enumerate(signal):
         if compare_elements(packets[0], packets[1]):
             sum_of_indices += index + 1
-    print("Final:", sum_of_indices)
+    print("Part 1:", sum_of_indices)
 
 
 def parse_file(text):
@@ -45,7 +45,7 @@ def compare_elements(a, b):
                 i += 1
                 continue
             
-            elif isinstance(a[i], int):
+            if isinstance(a[i], int):
                 a[i] = [a[i]]
 
             elif isinstance(b[i], int):
